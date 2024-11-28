@@ -4,41 +4,33 @@ import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { format, addMonths, subMonths, addDays, isSameMonth, isSameDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth, isBefore } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import useAuthStore from '@/store/useAuthStore';
+import { FontAwesome } from '@expo/vector-icons';
 
 const Calendar = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDay, setSelectedDay] = useState(null);
     const { setDay, Day } = useAuthStore();
-    // Verifica se o botão de "anterior" deve ser desabilitado
-    const canNavigatePrev = !isSameMonth(startOfMonth(currentDate), startOfMonth(new Date())); // Impede navegar para meses anteriores ao atual
-
-    // Navega para o mês anterior
+    const canNavigatePrev = !isSameMonth(startOfMonth(currentDate), startOfMonth(new Date()));
     const handlePrev = () => {
         if (canNavigatePrev) {
-            setCurrentDate(subMonths(currentDate, 1)); // Move um mês para trás
+            setCurrentDate(subMonths(currentDate, 1));
         }
     };
-
-    // Navega para o mês seguinte
     const handleNext = () => {
-        setCurrentDate(addMonths(currentDate, 1)); // Sempre move para o próximo mês
+        setCurrentDate(addMonths(currentDate, 1));
     };
-
-    // Lida com o clique no dia
     const handleDayPress = (day) => {
-        if (!isBefore(day, new Date())) { // Só seleciona se o dia não for anterior ao de hoje
+        if (!isBefore(day, new Date())) {
             let dia = new Intl.DateTimeFormat('pt-BR', {
                 day: '2-digit',
                 month: 'long',
-                year: 'numeric',  // Inclui o ano na formatação
+                year: 'numeric',
             }).format(day);
-            setSelectedDay(day); // Define o dia selecionado
+            setSelectedDay(day);
             setDay(dia);
             console.log(dia)
         }
     };
-
-    // Renderiza os dias do calendário
     const renderDays = () => {
         const start = startOfWeek(startOfMonth(currentDate));
         const end = endOfWeek(endOfMonth(currentDate));
@@ -46,7 +38,6 @@ const Calendar = () => {
         let day = start;
         let days = [];
 
-        // Adiciona os dias do calendário
         while (day <= end) {
             days.push(day);
             day = addDays(day, 1);
@@ -75,10 +66,9 @@ const Calendar = () => {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                {/* Condiciona a visibilidade do botão "anterior" */}
                 {canNavigatePrev ? (
                     <TouchableOpacity onPress={handlePrev}>
-                        <Text style={styles.navButton}>{"<"}</Text>
+                        <Text style={styles.navButton}><FontAwesome name="arrow-circle-left" color='black' size='20'></FontAwesome></Text>
                     </TouchableOpacity>
                 ) : (
                     <TouchableOpacity style={{ marginRight: '12%' }}>
@@ -86,7 +76,7 @@ const Calendar = () => {
                 )}
                 <Text style={styles.headerText}>{format(currentDate, 'MMMM yyyy', { locale: ptBR })}</Text>
                 <TouchableOpacity onPress={handleNext}>
-                    <Text style={styles.navButton}>{">"}</Text>
+                    <Text style={styles.navButton}><FontAwesome name="arrow-circle-right" color='black' size='20'></FontAwesome></Text>
                 </TouchableOpacity>
             </View>
 
@@ -111,7 +101,7 @@ const styles = StyleSheet.create({
     },
     header: {
         flexDirection: 'row',
-        justifyContent: 'space-between', // Centraliza o cabeçalho
+        justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: 35,
         marginTop: 30,
@@ -126,7 +116,7 @@ const styles = StyleSheet.create({
     navButton: {
         fontSize: 20,
         fontWeight: 'bold',
-        paddingHorizontal: 10, // Ajustando o espaçamento dos botões de navegação
+        paddingHorizontal: 10,
     },
     weekRow: {
         flexDirection: 'row',
@@ -148,11 +138,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         padding: 10,
-        justifyContent: 'space-between', // Ajuste para garantir que os dias estejam alinhados corretamente
+        justifyContent: 'space-between',
         paddingHorizontal: 0,
     },
     dayContainer: {
-        width: '13.5%', // Garantir que os dias se ajustem corretamente
+        width: '13.5%',
         height: 32,
 
         justifyContent: 'center',
@@ -160,11 +150,11 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     inactiveDay: {
-        opacity: 0.5, // Menos opacidade para dias do mês anterior
+        opacity: 0.5,
     },
     inactiveDayText: {
         textDecorationLine: 'none',
-        color: 'gray', // Cor mais escura para dias fora do mês atual
+        color: 'gray',
     },
     dayText: {
         fontSize: 16,

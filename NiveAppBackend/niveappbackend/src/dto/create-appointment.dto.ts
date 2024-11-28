@@ -9,7 +9,7 @@ export class CreateAppointmentDto {
   @IsString()
   serviceType: string;
 
-  @IsOptional() // Tornamos 'notes' opcional
+  @IsOptional()
   @IsString()
   notes?: string;
 }

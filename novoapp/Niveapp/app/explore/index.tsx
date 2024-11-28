@@ -1,9 +1,7 @@
-// app/explore/index.tsx
 import React, { useEffect } from 'react';
-import { View, FlatList, Alert, Linking, ScrollView } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import useAuthStore from '@/store/useAuthStore';
 import { useState } from 'react';
-import { format } from 'date-fns';
 import * as SecureStore from "expo-secure-store";
 import { Link, useNavigation, useRouter } from 'expo-router';
 import { useUser } from '@clerk/clerk-expo';
@@ -12,15 +10,10 @@ import { ActivityIndicator } from 'react-native';
 import {
   Button,
   ButtonText,
-  ButtonSpinner,
-  ButtonIcon,
-  ButtonGroup,
 } from '@/components/ui/button';
-import { Center } from '@/components/ui/center';
 import { Heading } from '@/components/ui/heading';
 import {
   Avatar,
-  AvatarBadge,
   AvatarFallbackText,
   AvatarImage,
 } from '@/components/ui/avatar';
@@ -33,7 +26,6 @@ import {
   AlertDialogBackdrop,
   AlertDialogContent,
   AlertDialogHeader,
-  AlertDialogCloseButton,
   AlertDialogFooter,
   AlertDialogBody,
 } from "@/components/ui/alert-dialog";
@@ -56,31 +48,26 @@ const ExploreScreen = () => {
   const navigation = useNavigation();
 
   const handleReload = () => {
-    const state = navigation.getState(); // Obtém o estado da navegação
+    const state = navigation.getState();
     const currentRoute = state.routes[state.index];
     navigation.reset({
-      index: 0, // Reseta a pilha de navegação para a tela inicial
-      routes: [{ name: currentRoute.name }], // Volta para a tela atual
+      index: 0,
+      routes: [{ name: currentRoute.name }],
     });
   };
 
 
-  const [message, setMessage] = useState(''); // Estado que vai armazenar a mensagem do filho
+  const [message, setMessage] = useState('');
 
-  // Função que será chamada pelo filho
   const handleMessageFromChild = (childMessage) => {
-    console.log("oi ChatGpt3!!!", childMessage)
-    setMessage(childMessage); // Atualiza o estado com a mensagem recebida
+    setMessage(childMessage);
   };
 
   useEffect(() => {
-    // Esse efeito será executado sempre que o valor de `message` mudar
-    console.log("Atualizou a mensagem:", message);
-  }, [message]); // Dependência no estado `message`
+  }, [message]);
 
 
   useEffect(() => {
-    // Somente faz a requisição se o loginToken estiver presente
     if (!loginToken && !accessToken && !user) {
       handleReload();
     }
@@ -116,7 +103,6 @@ const ExploreScreen = () => {
   }
 
   const fetchAccessTokens = async () => {
-
     setLoading(true);
     setError(null); // Limpar erro antes de tentar a requisição
     console.log("Pedindo accessToken e RefreshToken")
@@ -134,10 +120,8 @@ const ExploreScreen = () => {
         console.log(response)
         throw new Error('Erro ao fazer requisição');
       }
-
       const data = await response.json();
       const { accessToken: receivedAccessToken, refreshToken: receivedRefreshToken } = data;
-
       // Armazenando os tokens no Zustand
       await setAccessToken(receivedAccessToken);
       await setRefreshToken(receivedRefreshToken);
@@ -254,12 +238,10 @@ const ExploreScreen = () => {
         ? appointments.map((appointment) => appointment.appointmentDate)
         : [];
 
-      // Atualizar estado com listas vazias ou dados válidos
       setUserAppointmentDates(userAppointmentDates);
       setScheduledDates(scheduledDates);
       setAppointmentsTypeList(appointments); // Atualizando com os dados de appointments, que pode ser vazio
 
-      // Exibir as variáveis no console para depuração
       console.log('User Appointment Dates:', userAppointmentDates);
       console.log('Scheduled Dates:', scheduledDates);
       console.log('Appointments List:', appointments);
@@ -332,7 +314,7 @@ const ExploreScreen = () => {
                 backgroundColor: 'black',
                 alignSelf: 'center',
                 borderRadius: 20,
-                alignItems: 'center', // Centralizando os itens dentro do Box
+                alignItems: 'center',
                 justifyContent: 'space-around',
                 marginTop: 30,
                 paddingLeft: 20,
@@ -395,26 +377,3 @@ const ExploreScreen = () => {
 };
 export default ExploreScreen;
 
-/*
-              <View style={{ flexDirection: 'row', position: 'relative', marginTop: 15, gap: 5, borderWidth: 1, borderColor: 'black', borderRadius: 10, marginHorizontal: 15, height: 140, alignItems: 'center', justifyContent: 'left' }}>
-                <View style={{ flexDirection: 'row', marginTop: -30, gap: 5 }}>
-                  <Box style={{ marginLeft: 5, borderWidth: 0, borderColor: 'black', borderRadius: 5, width: 50, height: 50, alignItems: 'center', justifyContent: 'center', marginTop: 10 }}><FontAwesome color="gray" name="exclamation-triangle" size={30} /></Box>
-                  <View style={{ flexDirection: 'column', marginTop: 10 }}>
-                    <Text size="lg" style={{ alignSelf: 'center' }} bold="true">Você ainda não possui horários.</Text>
-                    <Text size="sm" style={{ alignSelf: 'center' }}>Agende até 2 horários com antecedência.</Text>
-                  </View>
-                </View>
-                <Button onPress={() => { router.push('/createAppointment'); }} action="positive" style={{ position: 'absolute', bottom: 10, right: 10 }}><ButtonText>Antecipe-se!</ButtonText></Button>
-              </View>
-
-              <View style={{ flexDirection: 'row', position: 'relative', marginTop: 15, gap: 5, borderWidth: 1, borderColor: 'black', borderRadius: 10, marginHorizontal: 15, height: 140, alignItems: 'center', justifyContent: 'left' }}>
-                <View style={{ flexDirection: 'row', marginTop: -30, gap: 5 }}>
-                  <Box style={{ marginLeft: 5, borderWidth: 0, borderColor: 'black', borderRadius: 5, width: 50, height: 50, alignItems: 'center', justifyContent: 'center', marginTop: 10 }}><FontAwesome color="gray" name="exclamation-triangle" size={30} /></Box>
-                  <View style={{ flexDirection: 'column', marginTop: 10 }}>
-                    <Text size="lg" style={{ alignSelf: 'center' }} bold="true">Você ainda não possui horários.</Text>
-                    <Text size="sm" style={{ alignSelf: 'center' }}>Agende até 2 horários com antecedência.</Text>
-                  </View>
-                </View>
-                <Button onPress={() => { router.push('/createAppointment'); }} action="positive" style={{ position: 'absolute', bottom: 10, right: 10 }}><ButtonText>Antecipe-se!</ButtonText></Button>
-              </View>
-*/

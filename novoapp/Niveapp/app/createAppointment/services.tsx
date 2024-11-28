@@ -8,12 +8,11 @@ import useAuthStore from '@/store/useAuthStore';
 import { useRouter } from 'expo-router';
 import { Heading } from '@/components/ui/heading';
 
-// Desabilitando o warning específico
+
 LogBox.ignoreLogs([
     'Warning: Text strings must be rendered within a <Text> component.',
 ]);
 
-// Função para converter o formato da data
 const convertToISOString = (Day, Time) => {
     const months = {
         janeiro: '01',
@@ -41,16 +40,14 @@ const ServiceBookingScreen = () => {
     const router = useRouter();
     const [notes, setNotes] = useState('');
     let { Day, Time, setDay, accessToken } = useAuthStore();
-    const [values, setValues] = useState("Manicure"); // Estado para o serviço selecionado
+    const [values, setValues] = useState("Manicure");
 
-    // Função para lidar com o botão de confirmação
     const handleConfirmBooking = () => {
         if (!values) {
             Alert.alert("Erro", "Por favor, selecione um serviço");
             return;
         }
 
-        // Lógica para confirmar o agendamento
         Alert.alert(
             "Agendamento Confirmado",
             `Serviço: ${values}\nNotas: ${notes || "Nenhuma nota"}`,
@@ -82,7 +79,6 @@ const ServiceBookingScreen = () => {
         }
     };
 
-    // Função para retornar ícone dependendo da seleção
     const getRadioIcon = (service) => {
         if (values === service) {
             return <MaterialCommunityIcons name="radiobox-marked" size={24} color="#000" />;
@@ -97,7 +93,6 @@ const ServiceBookingScreen = () => {
                     <Text>Selecione um Serviço</Text>
                 </Heading>
 
-                {/* Opções de Serviço com ícones radiais */}
                 <RadioGroup style={styles.servicos} value={values} onChange={setValues}>
                     <VStack space="lg">
                         <Radio size="lg" value="Manicure">
@@ -142,7 +137,6 @@ const ServiceBookingScreen = () => {
                     </VStack>
                 </RadioGroup>
 
-                {/* Área de Anotações */}
                 <TextInput
                     style={styles.textInput}
                     placeholder="Deixe uma observação ou recado..."
@@ -151,7 +145,6 @@ const ServiceBookingScreen = () => {
                     onChangeText={setNotes}
                 />
 
-                {/* Botão de Confirmar Agendamento */}
                 <ButtonGroup>
                     <Button onPress={sendDateToApi}>
                         <ButtonText style={styles.buttonText}>Confirmar Agendamento</ButtonText>

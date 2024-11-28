@@ -6,9 +6,6 @@ import {
   IsUrl,
   MinLength,
 } from 'class-validator';
-import { defaultIfEmpty } from 'rxjs';
-import { Unique } from 'typeorm';
-import { Url } from 'url';
 
 export class CreateUserDto {
   @IsString()
@@ -46,41 +43,3 @@ export class CreateUserDto {
   @IsString()
   clerkId: string;
 }
-
-/*
-import {
-  IsAlphanumeric,
-  IsEmail,
-  IsEnum,
-  IsInt,
-  IsNotEmpty,
-  IsString,
-  Matches,
-  MinLength,
-} from 'class-validator';
-
-
-
-
-  @IsInt()
-  age: number;
-
-  @IsString()
-  @IsEnum(['f', 'm', 'u'])
-  gender: string;
-
-  @IsNotEmpty()
-  @Matches(passwordRegEx, {
-    message: `Password must contain Minimum 8 and maximum 20 characters, 
-      at least one uppercase letter, 
-      one lowercase letter, 
-      one number and 
-      one special character`,
-
-
-
-
-      const passwordRegEx =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,20}$/;
-
-*/

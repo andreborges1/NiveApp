@@ -7,7 +7,6 @@ import {
 } from 'typeorm';
 import { Appointment } from './appointment.entity'; // Ajuste o caminho conforme necessário
 import { Role } from 'src/auth/enums/role.enum';
-import { Url } from 'url';
 
 @Entity('users')
 export class User {

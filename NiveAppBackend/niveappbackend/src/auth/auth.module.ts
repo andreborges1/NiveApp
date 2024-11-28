@@ -10,9 +10,8 @@ import { refreshJwtStrategy } from './strategies/refresh.strategy';
 import googleOauthConfig from './config/google-oauth.config';
 import { AppServiceModule } from '../app-service.module';
 import { GoogleStrategy } from './strategies/google.strategy';
-import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
-import { RolesGuard } from './guards/roles/roles.guard';
+
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
 import { LoginGuard } from './guards/login-guard/login-guard.guard';
 @Module({

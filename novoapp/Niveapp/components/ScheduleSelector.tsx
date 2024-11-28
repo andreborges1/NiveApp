@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Text } from './ui/text';  // Assegure-se de importar o componente Text corretamente
-import { Button } from './ui/button';  // Assegure-se de importar o componente Button corretamente
+import { Text } from './ui/text';
+import { Button } from './ui/button';
 import useAuthStore from '@/store/useAuthStore';
 import { useShallow } from 'zustand/react/shallow';
 
 interface ScheduleSelectorProps {
-    unavailableTimes?: string[];  // Prop que define os horários indisponíveis, é opcional
+    unavailableTimes?: string[];
 }
 
 const ScheduleSelector: React.FC<ScheduleSelectorProps> = ({ unavailableTimes = [] }) => {
@@ -21,8 +21,6 @@ const ScheduleSelector: React.FC<ScheduleSelectorProps> = ({ unavailableTimes = 
         afternoon: ['13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
         evening: ['19:00', '20:00', '21:00', '22:00'],
     };
-
-    // Função para combinar scheduledDates e userAppointmentDates
     const getCombinedScheduledDates = () => {
         const allScheduledDates = [...scheduledDates];
         if (userAppointmentDates) {
@@ -30,24 +28,17 @@ const ScheduleSelector: React.FC<ScheduleSelectorProps> = ({ unavailableTimes = 
         }
         return allScheduledDates;
     };
-
-    // Função para verificar se o horário está indisponível para o Day selecionado
     const getUnavailableTimesForSelectedDay = () => {
         const formattedUnavailableTimes: string[] = [];
 
         if (!Day) {
-            // Se Day estiver null ou undefined, não faz nada e retorna um array vazio
             return formattedUnavailableTimes;
         }
-
-        // Extraindo o dia, mês e ano da string Day (ex: "25 de novembro de 2024")
         const [dayOfMonth, monthName, year] = Day.split(' de ');
 
         if (!dayOfMonth || !monthName || !year) {
             return formattedUnavailableTimes;
         }
-
-        // Mapeamento de meses
         const months = {
             janeiro: '01',
             fevereiro: '02',
@@ -68,20 +59,12 @@ const ScheduleSelector: React.FC<ScheduleSelectorProps> = ({ unavailableTimes = 
         if (!month) {
             return formattedUnavailableTimes;
         }
-
-        // Construir a data no formato YYYY-MM-DD
         const selectedDate = `${year}-${month}-${dayOfMonth.padStart(2, '0')}`;
-
-        // Obter as datas combinadas de scheduledDates e userAppointmentDates
         const combinedScheduledDates = getCombinedScheduledDates();
-
-        // Filtrando os horários ocupados nas datas combinadas
         combinedScheduledDates.forEach((scheduledDate) => {
-            // Verifique se a data (sem horário) de scheduledDate corresponde ao Day selecionado
             const dateOnly = scheduledDate.split('T')[0];
             if (dateOnly === selectedDate) {
-                // Se corresponder, extraímos a hora do horário ocupado e adicionamos à lista de indisponíveis
-                const timeString = scheduledDate.split('T')[1].slice(0, 5); // Exemplo: '10:00'
+                const timeString = scheduledDate.split('T')[1].slice(0, 5);
                 formattedUnavailableTimes.push(timeString);
             }
         });
@@ -89,14 +72,12 @@ const ScheduleSelector: React.FC<ScheduleSelectorProps> = ({ unavailableTimes = 
         return formattedUnavailableTimes;
     };
 
-    // Usando useEffect para atualizar os horários indisponíveis sempre que o Day mudar
     useEffect(() => {
         if (Day) {
-            // Só atualiza os horários indisponíveis se Day não for null
             const unavailableTimes = getUnavailableTimesForSelectedDay();
             setUnavailableTimesForSelectedDay(unavailableTimes);
         }
-    }, [Day, scheduledDates, userAppointmentDates]); // Dependências: Day, scheduledDates e userAppointmentDates
+    }, [Day, scheduledDates, userAppointmentDates]);
 
     const handleSelect = (time: string) => {
         if (!unavailableTimesForSelectedDay.includes(time)) {
@@ -175,7 +156,7 @@ const styles = StyleSheet.create({
     },
     timeText: {
         fontSize: 16,
-        color: '#000', // Cor padrão para o texto
+        color: '#000',
     },
     unavailableTime: {
         backgroundColor: 'red',
@@ -186,7 +167,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
     },
     selectedTimeText: {
-        color: 'white', // Cor do texto quando selecionado
+        color: 'white',
         fontSize: 18,
     },
 });
